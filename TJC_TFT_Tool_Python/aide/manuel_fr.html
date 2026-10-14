@@ -1,0 +1,384 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>Manuel utilisateur — TJC TFT Tool</title>
+<style>
+:root{--navy:#0b1a3a;--navy2:#13264f;--cyan:#2fc6d6;--ink:#1c2433;--muted:#5b6780;--line:#dde3ee;--bg:#f6f8fc;--card:#fff;--code:#eef2f8}
+@media (prefers-color-scheme:dark){:root{--ink:#e8eef8;--muted:#8fa3c7;--line:#24365e;--bg:#0b1a3a;--card:#0f2147;--code:#13264f}}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:16px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif}
+header{background:var(--navy);color:#e8eef8;padding:22px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+header .t{font-size:22px;font-weight:600}header .s{color:#8fa3c7;font-size:14px}
+header a.lang{color:var(--navy);background:var(--cyan);padding:6px 14px;border-radius:4px;text-decoration:none;font-weight:600;font-size:14px}
+.wrap{display:flex;max-width:1180px;margin:0 auto;gap:32px;padding:24px 28px 60px}
+nav{flex:0 0 250px;position:sticky;top:16px;align-self:flex-start;max-height:calc(100vh - 32px);overflow:auto;font-size:14px}
+nav .h{font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-size:12px;margin-bottom:8px}
+nav a{display:block;color:var(--ink);text-decoration:none;padding:5px 10px;border-left:3px solid transparent}
+nav a:hover{border-left-color:var(--cyan);background:var(--card)}
+main{flex:1;min-width:0;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:8px 36px 36px}
+h1{display:none}h2{margin-top:36px;padding-top:8px;border-top:1px solid var(--line);font-size:22px}
+h2:first-of-type{border-top:0}
+code{background:var(--code);padding:1px 6px;border-radius:3px;font:14px Consolas,"Cascadia Mono",monospace}
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--code)}strong{color:inherit}
+li{margin:4px 0}a{color:#1a8fa0}
+footer{text-align:center;color:var(--muted);font-size:13px;padding:0 28px 30px}
+@media (max-width:820px){.wrap{flex-direction:column}nav{position:static;max-height:none;flex:none}main{padding:8px 18px 24px}}
+@media print{nav,header a.lang{display:none}main{border:0}}
+</style></head><body>
+<header><div><div class="t">Manuel utilisateur — TJC TFT Tool</div><div class="s">Personnalisation de l'écran de l'Ender-3 V3 SE</div></div>
+<a class="lang" href="manual_en.html">English</a></header>
+<div class="wrap"><nav><div class="h">Sommaire</div><a href="#presentation">Présentation</a><a href="#avant-de-commencer">Avant de commencer</a><a href="#installation">Installation</a><a href="#decouvrir-linterface">Découvrir l&#x27;interface</a><a href="#etape-1-extraire-les-images">Étape 1 — Extraire les images</a><a href="#etape-2-modifier-les-images">Étape 2 — Modifier les images</a><a href="#etape-3-reconstruire-le-fichier">Étape 3 — Reconstruire le fichier</a><a href="#etape-4-verifier-et-installer-sur-limprimante">Étape 4 — Vérifier et installer sur l&#x27;imprimante</a><a href="#utilisation-en-ligne-de-commande">Utilisation en ligne de commande</a><a href="#depannage">Dépannage</a><a href="#questions-frequentes">Questions fréquentes</a><a href="#credits-et-licence">Crédits et licence</a></nav><main><h1 id="manuel-utilisateur-tjc-tft-tool">Manuel utilisateur — TJC TFT Tool</h1>
+<h2 id="presentation">Présentation</h2>
+<p>TJC TFT Tool permet de remplacer les images de l'écran de l'Ender-3 V3 SE : écran de démarrage, icônes, fonds et libellés. Il extrait les 2 628 images du fichier <code>tjc.tft</code> en PNG, puis reconstruit un fichier que l'écran accepte, avec ses sommes de contrôle recalculées.</p>
+<p>Le travail se fait en quatre étapes :</p>
+<ol>
+<li>Extraire les images du fichier d'origine.</li>
+<li>Modifier celles que vous voulez changer.</li>
+<li>Reconstruire un nouveau <code>tjc.tft</code>.</li>
+<li>Vérifier le fichier, puis l'installer sur l'imprimante.</li>
+</ol>
+<p>Ce que l'outil ne fait pas : il ne modifie ni la disposition des écrans, ni les menus, ni les polices, ni le comportement de l'imprimante. Il ne touche qu'aux images, en conservant leurs dimensions.</p>
+<p>L'outil est disponible en français et en anglais, avec une interface graphique et une version en ligne de commande.</p>
+<h2 id="avant-de-commencer">Avant de commencer</h2>
+<p>Conservez toujours une copie intacte du fichier <code>tjc.tft</code> d'origine : c'est votre seul moyen de revenir à l'écran Creality. Renommez-le par exemple <code>tjc_origine.tft</code> et rangez-en une copie dans un dossier de sauvegarde.</p>
+<ul>
+<li>Repartez toujours de ce fichier d'origine. Si vous partez d'un fichier déjà modifié, ses anciennes modifications restent.</li>
+<li>Ne coupez jamais l'alimentation de l'imprimante pendant la mise à jour de l'écran.</li>
+<li>Ce logiciel n'est affilié ni à Creality, ni à TJC, ni à Nextion. Il est fourni sans aucune garantie : vous l'utilisez sous votre responsabilité.</li>
+</ul>
+<h2 id="installation">Installation</h2>
+<p>Deux versions existent : un programme Windows prêt à l'emploi (.exe), et une version Python pour les autres systèmes ou pour modifier le code.</p>
+<h3 id="version-windows-exe-recommandee">Version Windows (.exe) — recommandée</h3>
+<p>Aucune installation : décompressez l'archive et double-cliquez sur <code>TJC TFT Tool.exe</code>. Le manuel est intégré au programme.</p>
+<p>Au premier lancement, Windows SmartScreen peut afficher « Windows a protégé votre ordinateur », car le programme n'est pas signé numériquement. Cliquez sur <strong>Informations complémentaires</strong>, puis sur <strong>Exécuter quand même</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Fichier</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TJC TFT Tool.exe</code></td>
+<td>Le programme complet, avec son manuel</td>
+</tr>
+<tr>
+<td><code>COPYING</code></td>
+<td>Texte de la licence GNU GPL v3, à conserver avec le logiciel</td>
+</tr>
+</tbody>
+</table>
+<h3 id="version-python">Version Python</h3>
+<ol>
+<li>Téléchargez Python 3 depuis python.org et lancez l'installeur. Cochez impérativement la case <strong>Add python.exe to PATH</strong> avant de cliquer sur Install.</li>
+<li>Ouvrez l'invite de commandes (touche Windows, tapez <code>cmd</code>) et vérifiez l'installation avec <code>python --version</code>.</li>
+<li>Installez les bibliothèques nécessaires avec <code>python -m pip install pillow numpy</code>.</li>
+<li>Placez les fichiers du logiciel dans un même dossier, de préférence au chemin court, par exemple <code>C:\ecran</code>.</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Fichier</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tjc_tft_gui.pyw</code></td>
+<td>Interface graphique : c'est le fichier à lancer</td>
+</tr>
+<tr>
+<td><code>tjc_tft_tool.py</code></td>
+<td>Moteur de l'outil, utilisé par l'interface ou en ligne de commande</td>
+</tr>
+<tr>
+<td><code>aide\</code></td>
+<td>Ce manuel, en français et en anglais</td>
+</tr>
+<tr>
+<td><code>COPYING</code></td>
+<td>Texte de la licence GNU GPL v3, à conserver avec le logiciel</td>
+</tr>
+</tbody>
+</table>
+<p>Sous Windows, tapez <code>python</code> et non <code>python3</code> : ce dernier ouvre souvent le Microsoft Store au lieu de Python.</p>
+<h2 id="decouvrir-linterface">Découvrir l'interface</h2>
+<p>Double-cliquez sur <code>TJC TFT Tool.exe</code> (ou sur <code>tjc_tft_gui.pyw</code> pour la version Python) pour ouvrir l'interface ; aucune fenêtre de console ne s'affiche.</p>
+<table>
+<thead>
+<tr>
+<th>Zone</th>
+<th>Contenu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>En haut à droite</td>
+<td>Bouton <strong>Aide</strong> et sélecteur de langue <strong>FR | EN</strong></td>
+</tr>
+<tr>
+<td>Champs</td>
+<td>Fichier .tft d'origine, dossier des images, fichier .tft de sortie, chacun avec un bouton Parcourir…</td>
+</tr>
+<tr>
+<td>Boutons principaux</td>
+<td>Extraire les images, Reconstruire le .tft, Vérifier un .tft</td>
+</tr>
+<tr>
+<td>Sous les boutons</td>
+<td>Ouvrir le dossier des images, Effacer le journal</td>
+</tr>
+<tr>
+<td>Journal</td>
+<td>Compte rendu de chaque opération : vert si tout va bien, rouge en cas d'erreur</td>
+</tr>
+<tr>
+<td>Bas de la fenêtre</td>
+<td>Barre d'état, crédits, bouton À propos et crédits</td>
+</tr>
+</tbody>
+</table>
+<p>Le bouton <strong>Aide</strong> (ou la touche <strong>F1</strong>) ouvre ce manuel dans votre navigateur, dans la langue de l'interface.</p>
+<p>Le sélecteur de langue change toute l'interface instantanément, ainsi que les messages du journal. Votre choix est mémorisé pour les prochaines utilisations. Au premier lancement, l'interface prend la langue de Windows.</p>
+<p>Quand vous choisissez le fichier d'origine, l'interface propose d'elle-même un dossier <code>images</code> et un fichier de sortie <code>sortie\tjc.tft</code> à côté de lui. Vous pouvez les modifier.</p>
+<h2 id="etape-1-extraire-les-images">Étape 1 — Extraire les images</h2>
+<p>L'extraction transforme le fichier d'origine en 2 628 images PNG, en quelques secondes.</p>
+<ol>
+<li>Dans <strong>Fichier .tft d'origine</strong>, choisissez votre <code>tjc_origine.tft</code>.</li>
+<li>Dans <strong>Dossier des images</strong>, gardez le dossier proposé ou choisissez-en un autre.</li>
+<li>Cliquez sur <strong>Extraire les images</strong>. Le journal affiche « 2628 images extraites ».</li>
+<li>Cliquez sur <strong>Ouvrir le dossier des images</strong> pour les parcourir.</li>
+</ol>
+<p>Chaque image porte un nom de la forme <code>numéro_largeurxhauteur.png</code>, par exemple <code>0000_240x320.png</code>. Le numéro identifie l'image dans l'écran ; les dimensions sont celles qu'elle doit conserver. L'image 0 est l'écran de démarrage.</p>
+<p>Si le dossier contient déjà des PNG, l'interface demande confirmation : les images de même nom seront écrasées.</p>
+<h2 id="etape-2-modifier-les-images">Étape 2 — Modifier les images</h2>
+<p>Travaillez dans un dossier séparé, par exemple <code>modifs</code>, qui ne contient que les images que vous changez. Les autres seront reprises à l'identique depuis le fichier d'origine.</p>
+<ol>
+<li>Copiez l'image à modifier depuis le dossier <code>images</code> vers <code>modifs</code>.</li>
+<li>Ouvrez-la dans votre logiciel de retouche (GIMP, Paint.NET, Photopea, etc.).</li>
+<li>Modifiez-la, puis enregistrez-la au format PNG sous <strong>exactement le même nom</strong>.</li>
+</ol>
+<p>Règles à respecter :</p>
+<ul>
+<li><strong>Mêmes dimensions.</strong> L'écran affiche chaque image à un emplacement fixe. Une image de taille différente est refusée.</li>
+<li><strong>Format PNG uniquement.</strong> Ne passez jamais par le JPG : il ajoute des variations de couleur invisibles qui alourdissent fortement l'image.</li>
+<li><strong>Même nom de fichier.</strong> L'outil retrouve l'image grâce au numéro au début du nom.</li>
+</ul>
+<p>Conseils pour rester dans la place disponible :</p>
+<ul>
+<li>La place pour les images est limitée : environ 14 Ko de marge dans le fichier d'origine.</li>
+<li>Les aplats de couleur, les formes nettes et le texte sur fond uni se compressent très bien.</li>
+<li>Les dégradés, les photos, les ombres douces et le flou se compressent mal et prennent beaucoup de place.</li>
+<li>L'image 0 (écran de démarrage, 92 Ko) est la plus lourde : la simplifier libère beaucoup de place.</li>
+</ul>
+<p>À savoir :</p>
+<ul>
+<li>Beaucoup de textes de l'interface sont des images, une par langue. Pour changer un libellé en français, modifiez l'image française.</li>
+<li>L'écran affiche 65 536 couleurs (format RGB565). Les dégradés très fins peuvent montrer de légères bandes.</li>
+</ul>
+<h2 id="etape-3-reconstruire-le-fichier">Étape 3 — Reconstruire le fichier</h2>
+<p>La reconstruction produit un nouveau <code>tjc.tft</code> à partir du fichier d'origine et de vos images modifiées.</p>
+<ol>
+<li><strong>Fichier .tft d'origine</strong> : votre <code>tjc_origine.tft</code>.</li>
+<li><strong>Dossier des images</strong> : le dossier <code>modifs</code>.</li>
+<li><strong>Fichier .tft de sortie</strong> : par exemple <code>sortie\tjc.tft</code>. Ce fichier ne peut pas avoir le même chemin que l'original : l'outil le protège.</li>
+<li>Cliquez sur <strong>Reconstruire le .tft</strong>.</li>
+</ol>
+<p>Le journal affiche ensuite un rapport :</p>
+<table>
+<thead>
+<tr>
+<th>Ligne du rapport</th>
+<th>Signification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bilan des images modifiées</td>
+<td>Ancienne et nouvelle taille de chaque image, de la plus lourde à la plus légère</td>
+</tr>
+<tr>
+<td>N image(s) remplacée(s)</td>
+<td>Numéros des images réellement changées</td>
+</tr>
+<tr>
+<td>Marge restante</td>
+<td>Place encore disponible pour d'autres modifications</td>
+</tr>
+<tr>
+<td>Fichier écrit</td>
+<td>Emplacement du nouveau fichier</td>
+</tr>
+<tr>
+<td>CRC en-tête 1, en-tête 2, ressources, fichier ; taille</td>
+<td>Sommes de contrôle vérifiées par l'écran : elles doivent toutes indiquer OK</td>
+</tr>
+</tbody>
+</table>
+<p>Une image identique à l'originale n'est pas comptée comme modifiée : elle est recopiée octet pour octet.</p>
+<h2 id="etape-4-verifier-et-installer-sur-limprimante">Étape 4 — Vérifier et installer sur l'imprimante</h2>
+<p>Un fichier dont les quatre CRC et la taille indiquent OK est prêt à être installé.</p>
+<ol>
+<li>Cliquez sur <strong>Vérifier un .tft</strong>. L'outil contrôle le fichier de sortie s'il existe, sinon le fichier d'origine. Le journal doit se terminer par « Fichier cohérent. ».</li>
+<li>Copiez le nouveau <code>tjc.tft</code> sur la carte SD, en suivant la procédure de mise à jour de l'écran décrite par Creality pour votre version.</li>
+<li>Imprimante éteinte, insérez la carte, puis allumez l'imprimante.</li>
+<li>Attendez la fin de la mise à jour sans couper l'alimentation.</li>
+<li>Au redémarrage, vérifiez vos images et parcourez les menus.</li>
+</ol>
+<p>Pour revenir à l'écran d'origine, installez <code>tjc_origine.tft</code> de la même façon, renommé en <code>tjc.tft</code>.</p>
+<h2 id="utilisation-en-ligne-de-commande">Utilisation en ligne de commande</h2>
+<p>Toutes les fonctions de l'interface existent aussi en ligne de commande, avec la version Python, depuis le dossier du logiciel.</p>
+<table>
+<thead>
+<tr>
+<th>Commande</th>
+<th>Effet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>python tjc_tft_tool.py extract tjc_origine.tft images</code></td>
+<td>Extrait les images dans le dossier <code>images</code></td>
+</tr>
+<tr>
+<td><code>python tjc_tft_tool.py pack tjc_origine.tft modifs tjc.tft</code></td>
+<td>Reconstruit <code>tjc.tft</code> avec les images de <code>modifs</code></td>
+</tr>
+<tr>
+<td><code>python tjc_tft_tool.py check tjc.tft</code></td>
+<td>Vérifie les sommes de contrôle d'un fichier</td>
+</tr>
+<tr>
+<td><code>python tjc_tft_tool.py version</code></td>
+<td>Affiche la version, le copyright et les crédits</td>
+</tr>
+</tbody>
+</table>
+<p>Ajoutez <code>--lang fr</code> ou <code>--lang en</code>, n'importe où dans la commande, pour choisir la langue des messages. Par défaut, la langue du système est utilisée.</p>
+<p>Si un chemin contient des espaces, mettez-le entre guillemets, par exemple <code>"C:\Mes fichiers\tjc_origine.tft"</code>.</p>
+<h2 id="depannage">Dépannage</h2>
+<p>La plupart des erreurs viennent de l'installation, d'un chemin de fichier ou d'une image trop lourde.</p>
+<table>
+<thead>
+<tr>
+<th>Message ou symptôme</th>
+<th>Cause</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>« Python est introuvable… Microsoft Store »</td>
+<td><code>python3</code> renvoie vers le Store sous Windows</td>
+<td>Tapez <code>python</code> au lieu de <code>python3</code></td>
+</tr>
+<tr>
+<td>« Impossible de charger tjc_tft_tool.py » au lancement</td>
+<td>Fichier absent du dossier, ou bibliothèques non installées</td>
+<td>Placez les deux fichiers ensemble, puis lancez <code>python -m pip install pillow numpy</code></td>
+</tr>
+<tr>
+<td>Double-clic sur le .pyw sans effet</td>
+<td>Python non associé aux fichiers .pyw</td>
+<td>Réinstallez Python avec l'option PATH, ou lancez <code>python tjc_tft_gui.pyw</code></td>
+</tr>
+<tr>
+<td>Le bouton Aide signale un manuel introuvable</td>
+<td>Version Python : dossier <code>aide</code> absent ou déplacé</td>
+<td>Replacez le dossier <code>aide</code> à côté de <code>tjc_tft_gui.pyw</code></td>
+</tr>
+<tr>
+<td>« Windows a protégé votre ordinateur »</td>
+<td>Programme non signé numériquement</td>
+<td>Informations complémentaires, puis Exécuter quand même</td>
+</tr>
+<tr>
+<td>L'antivirus bloque ou supprime le .exe</td>
+<td>Faux positif courant pour les programmes empaquetés avec PyInstaller</td>
+<td>Autorisez le fichier dans l'antivirus, ou utilisez la version Python</td>
+</tr>
+<tr>
+<td>Le .exe met quelques secondes à s'ouvrir</td>
+<td>Il se décompresse en mémoire au démarrage</td>
+<td>Comportement normal</td>
+</tr>
+<tr>
+<td><code>FileNotFoundError</code></td>
+<td>Le fichier n'est pas dans le dossier courant</td>
+<td>Utilisez Parcourir…, ou donnez le chemin complet entre guillemets</td>
+</tr>
+<tr>
+<td>« Dimensions incorrectes, rien n'a été écrit »</td>
+<td>Image redimensionnée pendant la retouche</td>
+<td>Remettez l'image aux dimensions indiquées dans son nom</td>
+</tr>
+<tr>
+<td>« Les images modifiées dépassent l'espace disponible »</td>
+<td>Images trop chargées : dégradés, photo, passage par le JPG</td>
+<td>Simplifiez les images en tête du bilan, ou allégez l'écran de démarrage</td>
+</tr>
+<tr>
+<td>« Ce fichier n'est pas un .tft TJC de série T1 »</td>
+<td>Fichier d'un autre écran ou d'un autre modèle</td>
+<td>Utilisez le <code>tjc.tft</code> de l'Ender-3 V3 SE</td>
+</tr>
+<tr>
+<td>Une ligne de CRC indique ERREUR</td>
+<td>Fichier abîmé ou modifié par un autre outil</td>
+<td>Ne l'installez pas ; refaites la reconstruction à partir de l'original</td>
+</tr>
+<tr>
+<td>Accents mal affichés dans la console</td>
+<td>Encodage de l'invite de commandes Windows</td>
+<td>Sans conséquence sur les fichiers produits</td>
+</tr>
+<tr>
+<td>Une marge d'origine plus grande que prévu</td>
+<td>Vous partez d'un fichier déjà modifié</td>
+<td>Repartez de <code>tjc_origine.tft</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="questions-frequentes">Questions fréquentes</h2>
+<p><strong>Puis-je changer les menus, les textes saisis par l'écran ou les polices ?</strong><br />
+Non. L'outil ne remplace que des images de même taille. Les pages, le code de l'écran et les polices sont repris tels quels.</p>
+<p><strong>Que faire quand Creality publie un nouveau firmware d'écran ?</strong><br />
+Relancez la reconstruction avec le nouveau <code>tjc.tft</code> comme fichier d'origine et votre dossier <code>modifs</code>. Cela fonctionne tant que les numéros et dimensions des images n'ont pas changé ; sinon, l'outil signale les images concernées.</p>
+<p><strong>Pourquoi certaines images ne sont-elles pas compressées ?</strong><br />
+L'outil compresse une image seulement si cela réduit sa taille, exactement comme le logiciel de TJC. Les images très détaillées sont stockées telles quelles.</p>
+<p><strong>Puis-je modifier beaucoup d'images à la fois ?</strong><br />
+Oui, toutes si vous le souhaitez, tant que le total tient dans la place disponible. Surveillez la ligne « Marge restante » après chaque reconstruction.</p>
+<p><strong>Mes couleurs sont-elles exactement conservées ?</strong><br />
+Presque : l'écran utilise 65 536 couleurs. L'écart maximal est de quelques niveaux par composante, invisible à l'œil dans la plupart des cas.</p>
+<h2 id="credits-et-licence">Crédits et licence</h2>
+<p>Cet outil repose sur le travail de rétro-ingénierie de <strong>Clark Scheff</strong> et <strong>Max Zuidberg</strong>. Merci à eux.</p>
+<table>
+<thead>
+<tr>
+<th>Contributeur</th>
+<th>Apport</th>
+<th>Licence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Clark Scheff</strong> (0xD34D)</td>
+<td>Déchiffrement de l'en-tête 2 des fichiers tjc.tft et format RLE des images</td>
+<td>GPLv3</td>
+</tr>
+<tr>
+<td><strong>Max Zuidberg</strong> (projet UNUF — TFTTool, nxt-doc)</td>
+<td>Documentation du format TFT Nextion/TJC et algorithme de CRC</td>
+<td>MPL 2.0</td>
+</tr>
+<tr>
+<td>Mamadou Bâ Neige</td>
+<td>Encodeur RLE fidèle au compilateur TJC, CRC de la zone ressources, reconstruction du fichier, interface</td>
+<td>GPLv3</td>
+</tr>
+</tbody>
+</table>
+<p>Copyright © 2026 Mamadou Bâ Neige. TJC TFT Tool est un logiciel libre, distribué sous licence GNU GPL version 3 ou ultérieure. Vous pouvez le redistribuer et le modifier selon ses termes ; le texte complet figure dans le fichier <code>COPYING</code>.</p>
+<p>Ce logiciel n'est affilié ni à Creality, ni à TJC (Taojingchi), ni à Nextion. Ender-3 V3 SE est une marque de Creality.</p></main></div>
+<footer>© 2026 Mamadou Bâ Neige — GNU GPL v3 · D'après les travaux de Clark Scheff et Max Zuidberg</footer></body></html>
